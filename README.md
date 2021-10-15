@@ -6,7 +6,7 @@ Generate a normal map from a photo texture with UNet.
 
 ## Requirements
 The root folder should be structured as follows:
-
+```
 📁 root/
   ├─ 📁 crawler/
   |  ├─ 📄 cc0_crawler.py
@@ -24,6 +24,7 @@ The root folder should be structured as follows:
   ├─ 📄 train_disp.py
   ├─ 📄 train_norm.py
   └─ 📄 utils.py
+```
 
 ### Dependencies
 ```
@@ -42,9 +43,9 @@ Pillow==8.4.0
 ## How to use
 ### Web Crawler
 
-### Train
+### Train & Test
 
-### Eval
+### Evaluation
 
 ## Results
 
