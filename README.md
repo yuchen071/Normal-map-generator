@@ -162,5 +162,7 @@ DIR_EVAL    # str, evaluation folder with custom images
 CROP        # int [px], image resize and center crop size
 ```
 
+### How to import and use in Blender
+Refer to the tutorial from the ambientcg help page: [Link](https://help.ambientcg.com/02-Using%20the%20assets/Using_PBR_maps_in_Blender.html)
 
 
