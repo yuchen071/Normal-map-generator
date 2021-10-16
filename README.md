@@ -1,8 +1,14 @@
 # Normal map generator
-Generate a normal map from a photo texture with UNet.  
+Aside from Base Color texture images, 3D texture packs often include images such as Normal maps, Displacement maps to make the texture look more realistic. Blender Guru has an excellent video explaining what each texture map does in a 3D animation software. [Link](https://www.blenderguru.com/tutorials/basics-realistic-texturing)  
+![Textureing](https://images.squarespace-cdn.com/content/v1/58586fa5ebbd1a60e7d76d3e/1494407035745-K9TK8VNTL62E3J98RCU5/image-asset.jpeg?format=400w)
 
-## About this Project
+A texture pack from [ambientcg.com](https://ambientcg.com/) includes images below:  
+| Base Color | Normal Map | Displacement Map | Roughness |
+|:--:|:--:|:--:|:--:|
+| ![color](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/color.jpg) | ![normal](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/normal.jpg) | ![disp](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/displacement.jpg) | ![rough](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/roughness.jpg) |
 
+
+## Results
 
 ## Requirements
 The root folder should be structured as follows:
@@ -47,5 +53,5 @@ Pillow==8.4.0
 
 ### Evaluation
 
-## Results
+
 
