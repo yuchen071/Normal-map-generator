@@ -112,17 +112,17 @@ A `checkpoints/` folder should also appear after training script ends containing
 #### Parameters
 Global parameters can be tinkered in the script:  
 ```python
-DIR_TRAIN         # str, directory to training dataset
-DIR_VALID         # str, directory to validation folder for output
-DIR_TEST          # str, directory to testing folder with custom images
-CHK_OUT           # str, directory for model output
+DIR_TRAIN         # str, training dataset folder
+DIR_VALID         # str, validation folder for output
+DIR_TEST          # str, testing folder with custom images
+CHK_OUT           # str, model checkpoint output folder
 TEST_CROP         # int [px], center crop of custom testing images
 
 # Training parameters
 PARAMS = {
     "Type":       # str, just a name
 
-    "pretrain":   # str or None, .pth filename in checkpoint folder to continue training, change to None to train from scratch
+    "pretrain":   # str or None, .pth filename in CHK_OUT folder to continue training, change to None to train from scratch
 
     "train": {
         "epochs":       # int, training epochs
@@ -158,7 +158,7 @@ By default it reads images from the same `test/` folder and outputs generated im
 Global parameters can be tinkered in the script:  
 ```python
 PATH_CHK    # str, path/to/network_checkpoint.pth
-DIR_EVAL    # str, directory of evaluation folder with custom images
+DIR_EVAL    # str, evaluation folder with custom images
 CROP        # int [px], image resize and center crop size
 ```
 
