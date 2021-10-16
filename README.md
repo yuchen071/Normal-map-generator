@@ -42,7 +42,7 @@ The root folder should be structured as follows:
   └─ 📄 utils.py
 ```
 
-The `test/input` folder should contain your own images you wish to be converted.
+The `test/input/` folder should contain your own images you wish to be converted.
 
 ### Dependencies
 ```
@@ -65,7 +65,7 @@ Run the following scripts from the crawler folder in order:
 python cc0_crawler.py
 python cc0_unpack.py
 ```
-A `dataset` folder should appear in the root folder containing texture packs and unzipped images downloaded from ambientcg.com:
+A `dataset/` folder should appear in the root folder containing texture packs and unzipped images downloaded from ambientcg.com:
 ```
 📁 root/
   ├─ 📁 crawler/
@@ -97,7 +97,7 @@ A `dataset` folder should appear in the root folder containing texture packs and
   |     └─ 📚 ...
   ...
 ```
-### Train & Test
+### Train & Validation
 Run the following script to train a network that generates normal maps:
 ```
 python train_norm.py
@@ -106,10 +106,61 @@ Run the following script to train a network that generates displacement maps:
 ```
 python train_disp.py
 ```
-A `valid` folder should appear in root during training containing validation sample outputs.  
-A `checkpoints` folder should also appear after training script ends containing trained network `.pth` files.
+A `valid/` folder should appear in root during training containing validation sample outputs.  
+A `checkpoints/` folder should also appear after training script ends containing trained network `.pth` files.
+
+#### Parameters
+Global parameters can be tinkered in the script:  
+```python
+DIR_TRAIN         # str, directory to training dataset
+DIR_VALID         # str, directory to validation folder for output
+DIR_TEST          # str, directory to testing folder with custom images
+CHK_OUT           # str, directory for model output
+TEST_CROP         # int [px], center crop of custom testing images
+
+# Training parameters
+PARAMS = {
+    "Type":       # str, just a name
+
+    "pretrain":   # str or None, .pth filename in checkpoint folder to continue training, change to None to train from scratch
+
+    "train": {
+        "epochs":       # int, training epochs
+        "batch":        # int, batch size
+        "lr":           # float, learning rate
+        "split":        # float 0~1, split percentage between training and validation dataset
+        "nWorkers":     # int, Dataloader worker numbers
+        "log_interv":   # int, epoch interval for valid image output
+        },
+
+    "image": {
+        "img_resize":   # int [px], image resize size
+        "img_crop":     # int [px], image center crop size
+        "rand_flip":    # bool, flip training images randomly to add variation
+        "rand_crop":    # int [px] or None, random crop in training image to add variation
+        },
+
+    "writer": False,    # bool, Tensorboard on/off
+}
+```
 
 ### Evaluation
+Run the following script to evaluate the trained normal map generator network:
+```
+python eval_norm.py
+```
+Run the following script to evaluate the trained displacement map generator network:
+```
+python eval_disp.py
+```
+By default it reads images from the same `test/` folder and outputs generated images into `test/output/` folder. Can be changed in global parameters.
+#### Parameters
+Global parameters can be tinkered in the script:  
+```python
+PATH_CHK    # str, path/to/network_checkpoint.pth
+DIR_EVAL    # str, directory of evaluation folder with custom images
+CROP        # int [px], image resize and center crop size
+```
 
 
 

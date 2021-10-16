@@ -36,11 +36,7 @@ DIR_TRAIN = "dataset/train"
 DIR_VALID = "valid"
 DIR_TEST = "test"
 CHK_OUT = "checkpoints/disp"
-
-if not os.path.exists(DIR_VALID):
-    os.makedirs(DIR_VALID)
-if not os.path.exists(CHK_OUT):
-    os.makedirs(CHK_OUT)
+TEST_CROP = 512    # px
 
 PARAMS = {
     "Type": "Displacement net",
@@ -48,13 +44,18 @@ PARAMS = {
     "pretrain": None,
 
     "train": {
-        "epochs": 10,
+        "epochs": 100,
         "batch": 4,
         "lr": 2e-4,
         "split": 0.9,
         "nWorkers": 2,
         "log_interv": 10,
         },
+
+    "valid": {
+        "num": 2,  # should be smaller than batch size
+        "log_interv": 10,
+    },
 
     "image": {
         "img_resize": 512,
@@ -66,12 +67,12 @@ PARAMS = {
     "writer": False,    # Tensorboard on/off
 }
 
-# Validation output images
-VALID_NUM = 2       # amount, should be smaller than batch size
-VALID_CROP = 512    # px
-
-if PARAMS["train"]["batch"] <= VALID_NUM:
-    VALID_NUM = PARAMS["train"]["batch"]
+if not os.path.exists(DIR_VALID):
+    os.makedirs(DIR_VALID)
+if not os.path.exists(CHK_OUT):
+    os.makedirs(CHK_OUT)
+if PARAMS["train"]["batch"] <= PARAMS["valid"]["num"]:
+    PARAMS["valid"]["num"] = PARAMS["train"]["batch"]
 
 def pretty_json(hp):
   json_hp = json.dumps(hp, indent=2)
@@ -95,8 +96,8 @@ gray_transform = transforms.Compose([
 ])
 
 test_transform = transforms.Compose([
-    transforms.Resize(VALID_CROP),
-    transforms.CenterCrop(VALID_CROP),
+    transforms.Resize(TEST_CROP),
+    transforms.CenterCrop(TEST_CROP),
     transforms.ToTensor(),
     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)) # (input - mean) / std
     # outputs range from -1 to 1
@@ -176,7 +177,7 @@ def train(img_folder, label_folder, name_list, valid_folder, pretrained=None):
         start_epoch = 0
 
     # fixed valid output
-    v_num = VALID_NUM
+    v_num = PARAMS["valid"]["num"]
     if len(data_valid) <= v_num:
         v_num = len(data_valid)    # on the off-chance valid dataset only has 1 image
 
@@ -259,7 +260,7 @@ def train(img_folder, label_folder, name_list, valid_folder, pretrained=None):
             if PARAMS["writer"]:
                 writer.add_scalar("Loss/Valid", valid_loss_hist[-1], epoch)
 
-        if (epoch+1) % PARAMS["train"]["log_interv"] == 0 or epoch == 0:
+        if (epoch+1) % PARAMS["valid"]["log_interv"] == 0 or epoch == 0:
             with torch.no_grad():
                 img_in = valid_img_data[0].to(device)
                 target = valid_img_data[1].to(device)
