@@ -33,8 +33,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 #%%
 DIR_TRAIN = "dataset/train"
-DIR_TEST = "test"
 DIR_VALID = "valid"
+DIR_TEST = "test"
 CHK_OUT = "checkpoints/disp"
 
 if not os.path.exists(DIR_VALID):
@@ -66,8 +66,9 @@ PARAMS = {
     "writer": False,    # Tensorboard on/off
 }
 
-TEST_NUM = 2
-TEST_CROP = 512
+# Validation output images
+VALID_NUM = 2
+VALID_CROP = 512
 
 def pretty_json(hp):
   json_hp = json.dumps(hp, indent=2)
@@ -91,8 +92,8 @@ gray_transform = transforms.Compose([
 ])
 
 test_transform = transforms.Compose([
-    transforms.Resize(TEST_CROP),
-    transforms.CenterCrop(TEST_CROP),
+    transforms.Resize(VALID_CROP),
+    transforms.CenterCrop(VALID_CROP),
     transforms.ToTensor(),
     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)) # (input - mean) / std
     # outputs range from -1 to 1
@@ -172,16 +173,16 @@ def train(img_folder, label_folder, name_list, valid_folder, pretrained=None):
         start_epoch = 0
 
     # fixed valid output
-    test_img_data = next(iter(validloader))
-    test_img_data = [data[:TEST_NUM] for data in test_img_data]
+    valid_img_data = next(iter(validloader))
+    valid_img_data = [data[:VALID_NUM] for data in valid_img_data]
     if PARAMS["image"]["rand_crop"]:
-        test_img_data[0], test_img_data[1] = random_crop(test_img_data[0], test_img_data[1], PARAMS["image"]["rand_crop"])
+        valid_img_data[0], valid_img_data[1] = random_crop(valid_img_data[0], valid_img_data[1], PARAMS["image"]["rand_crop"])
 
     # tensorboard
     if PARAMS["writer"]:
         writer = SummaryWriter()
         writer.add_text("Parameters", pretty_json(PARAMS), 0)
-        writer.add_text("Validation images", str(test_img_data[2]), 0)
+        writer.add_text("Validation images", str(valid_img_data[2]), 0)
 
     sleep(0.3)
     for epoch in range(start_epoch, PARAMS["train"]["epochs"]):
@@ -253,15 +254,15 @@ def train(img_folder, label_folder, name_list, valid_folder, pretrained=None):
 
         if (epoch+1) % PARAMS["train"]["log_interv"] == 0 or epoch == 0:
             with torch.no_grad():
-                img_in = test_img_data[0].to(device)
-                target = test_img_data[1].to(device)
+                img_in = valid_img_data[0].to(device)
+                target = valid_img_data[1].to(device)
                 img_out = net(img_in)
 
                 target = gray2rgb(target).to(device)
                 img_out = gray2rgb(img_out).to(device)
                 imgs = torch.cat([img_in, target, img_out])
                 save_image(imgs, os.path.join(valid_folder, f"epoch_{epoch+1}.png"),
-                           value_range=(-1,1), normalize=True, nrow=TEST_NUM)
+                           value_range=(-1,1), normalize=True, nrow=VALID_NUM)
 
     # save pth
     torch.save({
