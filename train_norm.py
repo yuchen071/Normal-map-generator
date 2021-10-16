@@ -49,10 +49,10 @@ PARAMS = {
     "pretrain": None,
 
     "train": {
-        "epochs": 100,
-        "batch": 2,
+        "epochs": 1,
+        "batch": 4,
         "lr": 5e-4,
-        "split": 0.995,
+        "split": 0.9,
         "nWorkers": 2,
         "log_interv": 10,
         },
@@ -68,8 +68,11 @@ PARAMS = {
 }
 
 # Validation output images
-VALID_NUM = 2    # amount
+VALID_NUM = 2    # amount, should be smaller than batch size
 VALID_CROP = 512 # px
+
+if PARAMS["train"]["batch"] <= VALID_NUM:
+    VALID_NUM = PARAMS["train"]["batch"]
 
 def pretty_json(hp):
   json_hp = json.dumps(hp, indent=2)
@@ -166,8 +169,12 @@ def train(img_folder, label_folder, name_list, valid_folder, pretrained=None):
         start_epoch = 0
 
     # fixed valid output
+    v_num = VALID_NUM
+    if len(data_valid) <= v_num:
+        v_num = len(data_valid)    # on the off-chance valid dataset only has 1 image
+
     valid_img_data = next(iter(validloader))
-    valid_img_data = [data[:VALID_NUM] for data in valid_img_data]
+    valid_img_data = [data[:v_num] for data in valid_img_data]
     if PARAMS["image"]["rand_crop"]:
         valid_img_data[0], valid_img_data[1] = random_crop(valid_img_data[0], valid_img_data[1], PARAMS["image"]["rand_crop"])
 
@@ -255,7 +262,7 @@ def train(img_folder, label_folder, name_list, valid_folder, pretrained=None):
 
                 imgs = torch.cat([img_in, target, img_out])
                 save_image(imgs, os.path.join(valid_folder, f"epoch_{epoch+1}.png"),
-                           value_range=(-1,1), normalize=True, nrow=VALID_NUM)
+                           value_range=(-1,1), normalize=True, nrow=v_num)
 
     # save pth
     torch.save({
