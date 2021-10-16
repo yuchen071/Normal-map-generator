@@ -8,12 +8,12 @@ A texture pack from [ambientcg.com](https://ambientcg.com/) includes images belo
 |:--:|:--:|:--:|:--:|
 | ![color](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/color.jpg) | ![normal](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/normal.jpg) | ![disp](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/displacement.jpg) | ![rough](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/brick_texture/roughness.jpg) |
 
-This project aims to generate normal maps and displacement maps automatically with deep learning methods, using texture images from [ambientcg.com](https://ambientcg.com/) as our training dataset.
+This project aims to generate normal maps and displacement maps automatically with UNet, using texture images from [ambientcg.com](https://ambientcg.com/) as our training dataset.
 
 ## Results
 Training output:  
-![out1](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/results/output1.jpg)  
-![out2](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/results/output2.jpg)
+![out1](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/results/output1.png)  
+![out2](https://github.com/yuchen071/Normal-map-generator/blob/main/.readme_docs/results/output2.png)
 
 Blender demo with custom photo texture:
 | No Normal Map | With Normal Map |
@@ -30,8 +30,8 @@ The root folder should be structured as follows:
   |
   ├─ 📁 test/
   |  └─ 📁 input/
-  |     ├─ 🖼 image1.jpg
-  |     ├─ 🖼 image2.jpg
+  |     ├─ 🎨 image1.jpg
+  |     ├─ 🎨 image2.jpg
   |     └─ ...
   |
   ├─ 📄 eval_disp.py
@@ -41,6 +41,8 @@ The root folder should be structured as follows:
   ├─ 📄 train_norm.py
   └─ 📄 utils.py
 ```
+
+The `test/input` folder should contain your own images you wish to be converted.
 
 ### Dependencies
 ```
@@ -58,8 +60,54 @@ Pillow==8.4.0
 
 ## How to use
 ### Web Crawler
-
+Run the following scripts from the crawler folder in order:
+```
+python cc0_crawler.py
+python cc0_unpack.py
+```
+A `dataset` folder should appear in the root folder containing texture packs and unzipped images downloaded from ambientcg.com:
+```
+📁 root/
+  ├─ 📁 crawler/
+  |  ├─ 📄 cc0_crawler.py
+  |  └─ 📄 cc0_unpack.py
+  |
+  ├─ 📁 dataset/
+  |  ├─ 📁 train/
+  |  |  ├─ 📁 color/
+  |  |  |  ├─ 🎨 texture001.jpg
+  |  |  |  ├─ 🎨 texture002.jpg
+  |  |  |  └─ 🎨 ...
+  |  |  |
+  |  |  ├─ 📁 displacement/
+  |  |  |  ├─ 🎨 texture001.jpg
+  |  |  |  ├─ 🎨 texture002.jpg
+  |  |  |  └─ 🎨 ...
+  |  |  |
+  |  |  ├─ 📁 normal/
+  |  |  |  ├─ 🎨 texture001.jpg
+  |  |  |  ├─ 🎨 texture002.jpg
+  |  |  |  └─ 🎨 ...
+  |  |  |
+  |  |  └─ 📝 name_list.txt
+  |  |
+  |  └─📁 zip/
+  |     ├─ 📚 texture001.zip
+  |     ├─ 📚 texture002.zip
+  |     └─ 📚 ...
+  ...
+```
 ### Train & Test
+Run the following script to train a network that generates normal maps:
+```
+python train_norm.py
+```
+Run the following script to train a network that generates displacement maps:
+```
+python train_disp.py
+```
+A `valid` folder should appear in root during training containing validation sample outputs.  
+A `checkpoints` folder should also appear after training script ends containing trained network `.pth` files.
 
 ### Evaluation
 
