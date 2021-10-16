@@ -65,7 +65,7 @@ Run the following scripts from the crawler folder in order:
 python cc0_crawler.py
 python cc0_unpack.py
 ```
-A `dataset/` folder should appear in the root folder containing texture packs and unzipped images downloaded from ambientcg.com:
+A `dataset/` folder should appear in the root folder containing texture packs and unzipped images downloaded from ambientcg.com. File structure should appear as follows by default:
 ```
 📁 root/
   ├─ 📁 crawler/
@@ -97,6 +97,8 @@ A `dataset/` folder should appear in the root folder containing texture packs an
   |     └─ 📚 ...
   ...
 ```
+Global parameters in `cc0_crawler.py` can be tinkered to filter out texture types that you don't think is suitable for general training.
+
 ### Train & Validation
 Run the following script to train a network that generates normal maps:
 ```
