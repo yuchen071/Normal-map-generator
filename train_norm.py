@@ -4,7 +4,7 @@ Created on Mon Jun  7 14:34:39 2021
 
 @author: Eric
 """
-
+#%%
 from model import Unet
 from utils import random_fliplr, random_crop
 
