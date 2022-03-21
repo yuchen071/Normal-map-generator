@@ -48,7 +48,7 @@ The `test/input/` folder should contain your own images you wish to be converted
 ```
 torchinfo==0.1.1
 matplotlib==3.3.4
-numpy==1.19.2
+numpy==1.21.0
 torchvision==0.9.0
 fake_useragent==0.1.11
 torch==1.8.0
