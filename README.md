@@ -165,6 +165,6 @@ CROP        # int [px], image resize and center crop size
 ```
 
 ### How to import and use in Blender
-Refer to the tutorial from the ambientcg help page: [Link](https://help.ambientcg.com/02-Using%20the%20assets/Using_PBR_maps_in_Blender.html)
+Refer to the tutorial from the ambientcg help page: [Link](https://docs.ambientcg.com/books/using-the-assets/page/pbr-materials-in-blender)
 
 
