@@ -43,7 +43,7 @@ def main():
                         checklist[0] = 1
                         color_file = file
 
-                    if "Normal" in file:
+                    if "NormalGL" in file:
                         checklist[1] = 1
                         norm_file = file
 

@@ -12,6 +12,7 @@ from tqdm import tqdm
 from fake_useragent import UserAgent
 import copy
 import os
+# import numpy as np
 
 # a list of textures to NOT include
 filters = ['AcousticFoam',
@@ -21,26 +22,30 @@ filters = ['AcousticFoam',
   'Fence',
   'Fingerprint',
   'Foam',
+  'Metal Walkway',
   'OfficeCeiling',
+  'Pathway',
   'Paint00',
   'Painting',
   'PineNeedles',
   'Porcelain',
   'Road',
+  'RockBrush',
   'Rust001',
   'Sign',
   'Scratches',
   'Smear',
   'Sticker',
   'Tape',
+  'TreeEnd',
   'SurfaceImperfections',
   'Footsteps',
   'Substance']
 
-# CC0 website:
+# ambientCG website:
 output_path = '../dataset/zip/'
 home = 'https://ambientcg.com/'
-url = 'https://ambientcg.com/list?type=PhotoTexturePBR&sort=Alphabet&limit=180'
+url = "https://ambientcg.com/list?category=&type=Material&sort=Alphabet"
 
 if not os.path.exists(output_path):
     os.makedirs(output_path)
@@ -50,16 +55,15 @@ def main():
     # agent to request
     user_agent = UserAgent()
     download_url = []
-
-    method_url = [url + '&method=HeightFieldPhotogrammetry',
-                url + '&method=MultiAngleApproximation',
-                url + '&method=SubstanceDesignerPhotoBased']
+    
+    method_url = [url + '&method=PBRMultiAngle']
 
     # for methods with multiple pages of content (1 page has 180 links)
-    offsets = [0, 180, 360, 540]
+    offsets = [0, 180, 360, 540, 720, 900]
     for offset in offsets:
-        method_url.append(url + '&method=SubstanceDesignerProcedural' + '&offset={}'.format(offset))
-        method_url.append(url + '&method=BitmapApproximation' + '&offset={}'.format(offset))
+        method_url.append(url + '&method=PBRApproximated' + '&offset={}'.format(offset))
+        method_url.append(url + '&method=PBRPhotogrammetry' + '&offset={}'.format(offset))
+        method_url.append(url + '&method=PBRProcedural' + '&offset={}'.format(offset))
 
     #%%
     # =========================== request the list to "download_url"===================
@@ -71,7 +75,7 @@ def main():
         elems = soup.find_all('a')
         for elem in elems:
             # texture_url + elem = each download url
-            if elem.get('href').startswith("./view?id="):
+            if elem.get('href').startswith("/view?id="):
                 n = elem.get('href').split('/')[-1]
                 download_url.append(home + n)
 
@@ -89,6 +93,7 @@ def main():
                     n += 1
 
     copy_download_url.sort()
+    # np.savetxt('test.txt',copy_download_url,delimiter="\n", fmt="%s")
 
     #%%
     # =========================== request download url ===================
