@@ -112,7 +112,7 @@ def main():
 
         # if you want to choose png or JPG
         zip_url = []
-        elems = soup.find_all('a', class_= "DownloadButton")
+        elems = soup.find_all('a', class_= "TextLink")
         for elem in elems:
             zip_url.append(elem.get('href'))
 
