@@ -1,3 +1,7 @@
+# Archive message
+
+This repo is archived now. I don't plan on doing any major updates to it. Feel free to fork and update it!
+
 # Normal map generator
 Aside from Base Color texture images, 3D texture packs often include images such as Normal maps, Displacement maps to make the texture look more realistic. Blender Guru has an excellent video explaining what each texture map does in a 3D animation software: [Link](https://www.blenderguru.com/tutorials/basics-realistic-texturing) 
 
